@@ -25,9 +25,12 @@ jobs:
         run: bun install
 
       - name: Build static files
-        run:
-          echo "$BUN_PUBLIC_SUPABASE_KEY"
-          echo "$BUN_PUBLIC_SUPABASE_URL"
+        run: |
+          echo "--- Checking Environment Variables ---"
+          # Check the values are set in the shell environment
+          echo "SUPABASE_URL (Partial): ${BUN_PUBLIC_SUPABASE_URL:0:10}..." 
+          echo "SUPABASE_KEY (Partial): ${BUN_PUBLIC_SUPABASE_KEY:0:10}..."
+          echo "--- Starting Bun Build ---"
           bun run build
         env: 
           BUN_PUBLIC_SUPABASE_KEY: ${{ secrets.BUN_PUBLIC_SUPABASE_KEY }}
