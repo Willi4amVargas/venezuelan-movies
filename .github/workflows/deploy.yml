@@ -26,8 +26,8 @@ jobs:
 
       - name: Build static files
         run:
-          echo ${{ secrets.BUN_PUBLIC_SUPABASE_KEY }}
-          echo ${{ secrets.BUN_PUBLIC_SUPABASE_URL }}
+          echo "$BUN_PUBLIC_SUPABASE_KEY"
+          echo "$BUN_PUBLIC_SUPABASE_URL"
           bun run build
         env: 
           BUN_PUBLIC_SUPABASE_KEY: ${{ secrets.BUN_PUBLIC_SUPABASE_KEY }}
