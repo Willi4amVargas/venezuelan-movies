@@ -8,6 +8,11 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
+    environment: github-pages
+    env:
+      BUN_PUBLIC_SUPABASE_KEY: ${{ vars.BUN_PUBLIC_SUPABASE_KEY }}
+      BUN_PUBLIC_SUPABASE_URL: ${{ vars.BUN_PUBLIC_SUPABASE_URL }}
     
     permissions:
       contents: write 
@@ -33,10 +38,6 @@ jobs:
           echo "TESTING : $TESTING"
           echo "--- Starting Bun Build ---"
           bun run build
-        env: 
-          BUN_PUBLIC_SUPABASE_KEY: ${{ vars.BUN_PUBLIC_SUPABASE_KEY }}
-          BUN_PUBLIC_SUPABASE_URL: ${{ vars.BUN_PUBLIC_SUPABASE_URL }}
-          TESTING: ENVIRONMENT TEXT
         
       - name: Setup Pages
         uses: actions/configure-pages@v4
