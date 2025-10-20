@@ -28,13 +28,15 @@ jobs:
         run: |
           echo "--- Checking Environment Variables ---"
           # Check the values are set in the shell environment
-          echo "SUPABASE_URL (Partial): ${BUN_PUBLIC_SUPABASE_URL}..." 
-          echo "SUPABASE_KEY (Partial): ${BUN_PUBLIC_SUPABASE_KEY}..."
+          echo "SUPABASE_URL : $BUN_PUBLIC_SUPABASE_URL" 
+          echo "SUPABASE_KEY : $BUN_PUBLIC_SUPABASE_KEY"
+          echo "TESTING : $TESTING"
           echo "--- Starting Bun Build ---"
           bun run build
         env: 
           BUN_PUBLIC_SUPABASE_KEY: ${{ vars.BUN_PUBLIC_SUPABASE_KEY }}
           BUN_PUBLIC_SUPABASE_URL: ${{ vars.BUN_PUBLIC_SUPABASE_URL }}
+          TESTING: ENVIRONMENT TEXT
         
       - name: Setup Pages
         uses: actions/configure-pages@v4
