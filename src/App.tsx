@@ -5,10 +5,11 @@ import { RMovies } from "./pages/Movies/RMovies";
 import { CMovies } from "./pages/Movies/CMovies";
 import { UMovies } from "./pages/Movies/UMovies";
 import { DMovies } from "./pages/Movies/DMovies";
+import { env } from "./lib/config";
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={env.APP_BASE_PATH}>
       <Routes>
         <Route element={<ContextLayout />}>
           <Route path="/">
