@@ -26,6 +26,9 @@ jobs:
 
       - name: Build static files
         run: bun run build
+        env: 
+          BUN_PUBLIC_SUPABASE_KEY: ${{ secrets.BUN_PUBLIC_SUPABASE_KEY }}
+          BUN_PUBLIC_SUPABASE_URL: ${{ secrets.BUN_PUBLIC_SUPABASE_URL }}
         
       - name: Setup Pages
         uses: actions/configure-pages@v4
