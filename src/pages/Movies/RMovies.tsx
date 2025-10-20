@@ -1,5 +1,5 @@
 import { useMovie } from "@/context/MoviesContext";
-import type { Tables } from "@/interface/database";
+import type { Tables } from "../../../database.types";
 import { useEffect } from "react";
 
 function MovieComponent(movie: Tables<"movies">) {
@@ -9,7 +9,7 @@ function MovieComponent(movie: Tables<"movies">) {
         <h4 className="text-[2rem]">{movie.title}</h4>
         <p>{movie.description}</p>
         <p className="text-start">
-          Año: <b>{movie.release_year}</b>
+          Año: <b>{movie.release}</b>
         </p>
         <p className="text-start">
           Director: <i>{movie.director}</i>
@@ -28,8 +28,8 @@ export function RMovies() {
 
   return (
     <>
-      <section className="mx-20">
-        <div className="grid grid-cols-4">
+      <section className="mx-10 my-3">
+        <div className="grid grid-cols-4 gap-x-3 gap-y-2">
           {movies &&
             movies.map((movie) => (
               <MovieComponent key={`MOVIE-${movie.id}`} {...movie} />

@@ -39,38 +39,109 @@ export type Database = {
   }
   public: {
     Tables: {
+      director: {
+        Row: {
+          biography: string | null
+          birth: string | null
+          id: number
+          name: string
+        }
+        Insert: {
+          biography?: string | null
+          birth?: string | null
+          id?: number
+          name: string
+        }
+        Update: {
+          biography?: string | null
+          birth?: string | null
+          id?: number
+          name?: string
+        }
+        Relationships: []
+      }
+      gender: {
+        Row: {
+          description: string
+          id: number
+        }
+        Insert: {
+          description: string
+          id?: number
+        }
+        Update: {
+          description?: string
+          id?: number
+        }
+        Relationships: []
+      }
+      movie_gender: {
+        Row: {
+          gender_id: number
+          movie_id: number
+        }
+        Insert: {
+          gender_id: number
+          movie_id?: number
+        }
+        Update: {
+          gender_id?: number
+          movie_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "movie_gender_gender_id_fkey"
+            columns: ["gender_id"]
+            isOneToOne: false
+            referencedRelation: "gender"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "movie_gender_movie_id_fkey"
+            columns: ["movie_id"]
+            isOneToOne: false
+            referencedRelation: "movies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       movies: {
         Row: {
-          classification: string | null
-          description: string | null
-          director: number | null
-          duration: string | null
+          description: string
+          director: number
+          duration: number
           id: number
-          release_year: string | null
+          release: string
           synopsis: string | null
           title: string
         }
         Insert: {
-          classification?: string | null
-          description?: string | null
-          director?: number | null
-          duration?: string | null
+          description: string
+          director: number
+          duration: number
           id?: number
-          release_year?: string | null
+          release: string
           synopsis?: string | null
           title: string
         }
         Update: {
-          classification?: string | null
-          description?: string | null
-          director?: number | null
-          duration?: string | null
+          description?: string
+          director?: number
+          duration?: number
           id?: number
-          release_year?: string | null
+          release?: string
           synopsis?: string | null
           title?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "movies_director_fkey"
+            columns: ["director"]
+            isOneToOne: false
+            referencedRelation: "director"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
