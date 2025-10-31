@@ -107,6 +107,7 @@ export type Database = {
       }
       movies: {
         Row: {
+          cover: string | null
           description: string
           director: number
           duration: number
@@ -116,6 +117,7 @@ export type Database = {
           title: string
         }
         Insert: {
+          cover?: string | null
           description: string
           director: number
           duration: number
@@ -125,6 +127,7 @@ export type Database = {
           title: string
         }
         Update: {
+          cover?: string | null
           description?: string
           director?: number
           duration?: number

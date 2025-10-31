@@ -1,45 +1,105 @@
 import { createContext, useContext, useState } from "react";
-import type { Tables, TablesInsert } from "../../database.types";
+import type { TablesInsert } from "../../database.types";
 import { supabase } from "@/lib/supabase";
 import { toast } from "react-toastify";
+import type { QueryData } from "@supabase/supabase-js";
+import { AddImageToBucket, GetImageUrl } from "@/lib/bucket";
+
+interface optionalData {
+  director?: boolean;
+}
+
+const moviesWithDirector = supabase.from("movies").select(`*, director (*)`);
+export type MoviesWithDirector = QueryData<typeof moviesWithDirector>;
+export type MovieWithDirector = MoviesWithDirector[number];
+
+export interface MovieWithDirectorAndCoverUrl extends MovieWithDirector {
+  coverUrl?: string;
+}
+
+interface InsertMovieData extends TablesInsert<"movies"> {
+  coverFile: File | null;
+}
 
 export const MovieContext = createContext<{
-  movies: Tables<"movies">[];
-  getMovies: () => Promise<void>;
-  createMovie: (movie: TablesInsert<"movies">) => Promise<void>;
+  movies: MovieWithDirectorAndCoverUrl[] | undefined;
+  newMovie: InsertMovieData;
+  setNewMovie: (movie: InsertMovieData) => void;
+  getMovies: (optionalData?: optionalData) => Promise<void>;
+  createMovie: (movie: InsertMovieData) => Promise<void>;
 }>({
   movies: undefined,
-  getMovies: async () => {},
+  newMovie: undefined,
+  setNewMovie: (movie: InsertMovieData) => {},
+  getMovies: async (optionalData?: optionalData) => {},
   createMovie: async () => {},
 });
 
 export const MovieProvider = ({ children }: { children: React.ReactNode }) => {
-  const [movies, setMovies] = useState<Tables<"movies">[]>();
+  const [movies, setMovies] = useState<MovieWithDirectorAndCoverUrl[]>();
+  const [newMovie, setMovieNew] = useState<InsertMovieData>();
 
-  const getMovies = async () => {
-    const { data, error } = await supabase.from("movies").select();
+  const getMovies = async (optionalData?: optionalData) => {
+    const { data, error } = await moviesWithDirector;
 
-    if (data) setMovies(data);
+    if (data) {
+      const moviesWithUrls = await Promise.all(
+        data.map(async (m) => {
+          const coverUrl = await GetImageUrl(m.cover);
+          return {
+            ...m,
+            coverUrl: coverUrl,
+          };
+        })
+      );
+      setMovies(moviesWithUrls);
+    }
 
     if (error) toast.error(error.details);
   };
 
-  const createMovie = async (movie: TablesInsert<"movies">): Promise<void> => {
+  const createMovie = async (movie: InsertMovieData): Promise<void> => {
+    if (!movie.coverFile) {
+      console.log("No cover file provided");
+      return;
+    }
+    const fileSplit = movie.coverFile.name.split(".");
+
+    const filename = `${movie.title.replace(" ", "_").toLocaleLowerCase()}.${
+      movie.coverFile.name.split(".")[fileSplit.length - 1]
+    }`;
+
     const { data, error } = await supabase
       .from("movies")
-      .insert(movie)
+      .insert({
+        title: movie.title,
+        description: movie.description,
+        release: movie.release,
+        director: movie.director,
+        cover: filename,
+        duration: movie.duration,
+        synopsis: movie.synopsis,
+      })
       .select();
+    await AddImageToBucket(filename, movie.coverFile);
 
     if (error) {
       toast.error(error.message);
       return;
     }
 
-    console.log("Created movie:", data);
+    await getMovies();
     toast.success("Pelicula creada con exito");
   };
+
+  const setNewMovie = (movie: InsertMovieData): void => {
+    // in case i need to modify before send... i think
+    setMovieNew(movie);
+  };
   return (
-    <MovieContext.Provider value={{ movies, getMovies, createMovie }}>
+    <MovieContext.Provider
+      value={{ movies, newMovie, setNewMovie, getMovies, createMovie }}
+    >
       {children}
     </MovieContext.Provider>
   );

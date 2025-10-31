@@ -6,6 +6,8 @@ import { CMovies } from "./pages/Movies/CMovies";
 import { UMovies } from "./pages/Movies/UMovies";
 import { DMovies } from "./pages/Movies/DMovies";
 import { env } from "./lib/config";
+import { CDirector } from "./pages/Director/CDirector";
+import { RDirector } from "./pages/Director/RDirector";
 
 export default function App() {
   return (
@@ -18,6 +20,8 @@ export default function App() {
             <Route path="rmovies" element={<RMovies />} />
             <Route path="umovies" element={<UMovies />} />
             <Route path="dmovies" element={<DMovies />} />
+            <Route path="cdirector" element={<CDirector />} />
+            <Route path="rdirector" element={<RDirector />} />
           </Route>
         </Route>
       </Routes>
