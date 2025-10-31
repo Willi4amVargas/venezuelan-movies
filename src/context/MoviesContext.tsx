@@ -35,6 +35,15 @@ export const MovieContext = createContext<{
   createMovie: async () => {},
 });
 
+function normalizeText(texto: string): string {
+    let slug: string = texto.toLowerCase();
+    slug = slug.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    slug = slug.replace(/[^a-z0-9]+/g, "_");
+    slug = slug.replace(/^_+|_+$/g, "");
+
+    return slug;
+}
+
 export const MovieProvider = ({ children }: { children: React.ReactNode }) => {
   const [movies, setMovies] = useState<MovieWithDirectorAndCoverUrl[]>();
   const [newMovie, setMovieNew] = useState<InsertMovieData>();
@@ -65,7 +74,7 @@ export const MovieProvider = ({ children }: { children: React.ReactNode }) => {
     }
     const fileSplit = movie.coverFile.name.split(".");
 
-    const filename = `${movie.title.replace(" ", "_").toLocaleLowerCase()}.${
+    const filename = `${normalizeText(movie.title)}.${
       movie.coverFile.name.split(".")[fileSplit.length - 1]
     }`;
 

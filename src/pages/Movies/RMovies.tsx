@@ -13,12 +13,12 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { FiFilm, FiCalendar, FiUser } from "react-icons/fi";
 import { PiImageSquareFill } from "react-icons/pi";
+import { Link } from "react-router";
 
 function MovieComponent(movie: MovieWithDirectorAndCoverUrl) {
   return (
     <Card className="hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
       <div className="relative w-full aspect-2/3 bg-muted flex items-center justify-center rounded-t-lg overflow-hidden">
-        {/* Este será el espacio para tu imagen de carátula */}
         <span className="text-muted-foreground text-sm font-semibold p-4 text-center">
           {movie.coverUrl ? (
             <img src={movie.coverUrl} alt={`MOVIE-${movie.title}`} />
@@ -72,17 +72,19 @@ export function RMovies() {
   }, [movies]);
 
   return (
-    <section className="p-4 md:p-8">
+    <section className="p-4 md:p-8 w-full">
       <h2 className="text-3xl font-extrabold mb-6 tracking-tight border-b pb-2">
         🎥 Catálogo de Películas Venezolanas
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-5">
         {movies ? (
           movies.map((movie) => (
-            <MovieComponent key={`MOVIE-${movie.id}`} {...movie} />
+            <Link to={`/rmovies/${movie.id}`}>
+              <MovieComponent key={`MOVIE-${movie.id}`} {...movie} />
+            </Link>
           ))
         ) : (
-          <p className="col-span-full text-center text-muted-foreground">
+          <p className="w-full col-span-full text-center text-muted-foreground">
             Cargando películas...
           </p>
         )}
