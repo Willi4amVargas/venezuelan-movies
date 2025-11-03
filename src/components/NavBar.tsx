@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Menubar,
   MenubarContent,
@@ -6,19 +6,29 @@ import {
   MenubarMenu,
   MenubarTrigger,
 } from "@/components/ui/menubar";
-import { Button } from "@/components/ui/button"; 
-import { FiAlignJustify, FiX, FiFilm, FiUsers } from "react-icons/fi"; 
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { FiAlignJustify, FiX, FiFilm, FiUsers } from "react-icons/fi";
 import { Link } from "react-router";
+import { CiUser } from "react-icons/ci";
+import { useUser } from "@/context/UserContext";
+import { SignOut } from "@/pages/User/SignOut";
 
 export function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
-  
-  const linkClass = "flex items-center space-x-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors duration-200 text-sm font-medium";
+  const { user } = useUser();
+
+  const linkClass =
+    "flex items-center space-x-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors duration-200 text-sm font-medium";
 
   return (
     <>
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 z-30 lg:hidden"
           onClick={() => setIsOpen(false)}
         />
@@ -33,9 +43,9 @@ export function NavBar() {
           <h2 className="text-xl font-bold tracking-tight text-primary">
             🎬 Películas Venezolanas
           </h2>
-          <Button 
-            variant="ghost" 
-            size="icon" 
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => setIsOpen(false)}
             className="lg:hidden"
           >
@@ -43,68 +53,92 @@ export function NavBar() {
           </Button>
         </div>
 
-        <Link 
-            to={"/"} 
-            className={`${linkClass} ${window.location.pathname === '/' ? 'bg-primary text-primary-foreground hover:bg-primary/90' : 'text-foreground'}`}
-            onClick={() => setIsOpen(false)}
+        <Link
+          to={"/"}
+          className={`${linkClass} ${
+            window.location.pathname === "/"
+              ? "bg-primary text-primary-foreground hover:bg-primary/90"
+              : "text-foreground"
+          }`}
+          onClick={() => setIsOpen(false)}
         >
-            <FiFilm size={20} />
-            <span>Inicio</span>
+          <FiFilm size={20} />
+          <span>Inicio</span>
         </Link>
-        
+
         <div className="mt-4 space-y-2">
-            
-            <h3 className="text-xs font-semibold uppercase text-muted-foreground pt-4 border-t mt-4">
-                Gestión de Contenido
-            </h3>
-            
-            <Menubar className="flex flex-col h-full border-none p-0">
-                <MenubarMenu>
-                    <MenubarTrigger className={linkClass}>
-                        <FiFilm size={20} />
-                        <span>Películas</span>
-                    </MenubarTrigger>
-                    <MenubarContent className="w-48 ml-4">
-                        <Link to={"/cmovies"} onClick={() => setIsOpen(false)}>
-                            <MenubarItem>Agregar Película</MenubarItem>
-                        </Link>
-                        <Link to={"/rmovies"} onClick={() => setIsOpen(false)}>
-                            <MenubarItem>Ver Películas</MenubarItem>
-                        </Link>
-                        {/* <Link to={"/umovies"} onClick={() => setIsOpen(false)}>
+          <h3 className="text-xs font-semibold uppercase text-muted-foreground pt-4 border-t mt-4">
+            Gestión de Contenido
+          </h3>
+          <Menubar className="flex flex-col h-full border-none p-0">
+            <MenubarMenu>
+              <MenubarTrigger className={linkClass}>
+                <FiFilm size={20} />
+                <span>Películas</span>
+              </MenubarTrigger>
+              <MenubarContent className="w-48 ml-4">
+                <Link to={"/cmovies"} onClick={() => setIsOpen(false)}>
+                  <MenubarItem>Agregar Película</MenubarItem>
+                </Link>
+                <Link to={"/rmovies"} onClick={() => setIsOpen(false)}>
+                  <MenubarItem>Ver Películas</MenubarItem>
+                </Link>
+                {/* <Link to={"/umovies"} onClick={() => setIsOpen(false)}>
                             <MenubarItem>Editar Película</MenubarItem>
                         </Link>
                         <Link to={"/dmovies"} onClick={() => setIsOpen(false)}>
                             <MenubarItem>Eliminar Película</MenubarItem>
                         </Link> */}
-                    </MenubarContent>
-                </MenubarMenu>
+              </MenubarContent>
+            </MenubarMenu>
 
-                <MenubarMenu>
-                    <MenubarTrigger className={linkClass}>
-                        <FiUsers size={20} />
-                        <span>Directores</span>
-                    </MenubarTrigger>
-                    <MenubarContent className="w-48 ml-4">
-                        <Link to={"/cdirector"} onClick={() => setIsOpen(false)}>
-                            <MenubarItem>Agregar Director</MenubarItem>
-                        </Link>
-                        <Link to={"/rdirector"} onClick={() => setIsOpen(false)}>
-                            <MenubarItem>Ver Directores</MenubarItem>
-                        </Link>
-                    </MenubarContent>
-                </MenubarMenu>
-            </Menubar>
+            <MenubarMenu>
+              <MenubarTrigger className={linkClass}>
+                <FiUsers size={20} />
+                <span>Directores</span>
+              </MenubarTrigger>
+              <MenubarContent className="w-48 ml-4">
+                <Link to={"/cdirector"} onClick={() => setIsOpen(false)}>
+                  <MenubarItem>Agregar Director</MenubarItem>
+                </Link>
+                <Link to={"/rdirector"} onClick={() => setIsOpen(false)}>
+                  <MenubarItem>Ver Directores</MenubarItem>
+                </Link>
+              </MenubarContent>
+            </MenubarMenu>
+          </Menubar>
+        </div>
+        <div className="absolute bottom-4 w-full left-0 flex px-10 h-10 justify-center items-center">
+          <Popover>
+            <PopoverTrigger className="w-full border border-black/50 rounded-sm py-1">
+              <CiUser size={24} className="mx-auto" />
+            </PopoverTrigger>
+            <PopoverContent>
+              {user && user.user && user.session ? (
+                <div className="flex justify-between">
+                  <span className="w-9 h-9 shrink-0 rounded-full bg-primary/10 flex items-center justify-center font-bold text-xl text-primary border border-primary">
+                    {user.user.email.charAt(0)}
+                  </span>
+                  <SignOut />
+                </div>
+              ) : (
+                <div className="flex justify-between ">
+                  <Button asChild variant="link">
+                    <Link to={"/user/login"}>Iniciar Sesion</Link>
+                  </Button>
+                  <Button asChild variant="link">
+                    <Link to={"/user/signup"}>Registrarse</Link>
+                  </Button>
+                </div>
+              )}
+            </PopoverContent>
+          </Popover>
         </div>
       </nav>
 
-      <div className="fixed bottom-0 left-0 bg-primary text-primary-foreground rounded-tr-xl px-4 py-3 z-50 shadow-lg">
-        <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={() => setIsOpen(!isOpen)}
-        >
-            {isOpen ? <FiX size={24} /> : <FiAlignJustify size={24} />}
+      <div className="fixed bottom-0 right-0 bg-primary text-primary-foreground rounded-tl-xl px-4 py-2 z-50 shadow-lg">
+        <Button variant="ghost" size="icon" onClick={() => setIsOpen(!isOpen)}>
+          {isOpen ? <FiX size={24} /> : <FiAlignJustify size={24} />}
         </Button>
       </div>
     </>

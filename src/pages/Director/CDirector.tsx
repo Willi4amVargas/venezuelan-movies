@@ -41,7 +41,7 @@ export function CDirector() {
   };
 
   return (
-    <section className="flex justify-center p-4 md:p-8 w-full">
+    <section className="flex justify-center items-center p-4 md:p-8 w-full">
       <Card className="w-full max-w-xl shadow-xl">
         <CardHeader>
           <CardTitle className="text-3xl flex items-center space-x-2">
