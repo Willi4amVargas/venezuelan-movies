@@ -19,7 +19,7 @@ import {
 
 import { useDirector } from "@/context/DirectorContext";
 import { useMovie } from "@/context/MoviesContext";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router";
 import { toast } from "react-toastify";
 import { FaSave } from "react-icons/fa"; // Íconos actualizados

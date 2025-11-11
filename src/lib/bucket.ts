@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { supabase } from "./supabase";
+import { supabase } from "@/lib/supabase";
 
 export async function AddImageToBucket(filename: string, FileInput: File) {
   const { data, error } = await supabase.storage

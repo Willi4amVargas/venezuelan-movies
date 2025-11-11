@@ -1,16 +1,16 @@
 import { BrowserRouter, Route, Routes } from "react-router";
-import { ContextLayout } from "./ContextLayout";
-import { Index } from "./pages/Index";
-import { RMovies } from "./pages/Movies/RMovies";
-import { CMovies } from "./pages/Movies/CMovies";
-import { UMovies } from "./pages/Movies/UMovies";
-import { DMovies } from "./pages/Movies/DMovies";
-import { env } from "./lib/config";
-import { CDirector } from "./pages/Director/CDirector";
-import { RDirector } from "./pages/Director/RDirector";
-import { Movie } from "./pages/Movies/components/Movie";
-import { SignIn } from "./pages/User/SignIn";
-import { SignUp } from "./pages/User/SignUp";
+import { ContextLayout } from "@/ContextLayout";
+import { Index } from "@/pages/Index";
+import { RMovies } from "@/pages/Movies/RMovies";
+import { CMovies } from "@/pages/Movies/CMovies";
+import { UMovies } from "@/pages/Movies/UMovies";
+import { DMovies } from "@/pages/Movies/DMovies";
+import { env } from "@/lib/config";
+import { CDirector } from "@/pages/Director/CDirector";
+import { RDirector } from "@/pages/Director/RDirector";
+import { Movie } from "@/pages/Movies/components/Movie";
+import { SignIn } from "@/pages/User/SignIn";
+import { SignUp } from "@/pages/User/SignUp";
 
 export default function App() {
   return (

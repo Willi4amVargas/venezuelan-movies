@@ -1,5 +1,5 @@
 import { useDirector } from "@/context/DirectorContext";
-import type { Tables } from "database.types";
+import type { Tables } from "db";
 import { useEffect } from "react";
 import {
   Card,

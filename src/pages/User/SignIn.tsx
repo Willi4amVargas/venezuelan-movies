@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 
 import { useUser } from "@/context/UserContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FiLogIn, FiMail, FiLock } from "react-icons/fi";
 import { Link, useNavigate } from "react-router";
 

@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useDirector } from "@/context/DirectorContext";
-import type { TablesInsert } from "database.types";
+import type { TablesInsert } from "db";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { IoArrowBackOutline } from "react-icons/io5";

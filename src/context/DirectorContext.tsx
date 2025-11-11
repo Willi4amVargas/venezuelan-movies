@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import type { Tables, TablesInsert } from "../../database.types";
+import type { Tables, TablesInsert } from "db";
 import { supabase } from "@/lib/supabase";
 import { toast } from "react-toastify";
 
