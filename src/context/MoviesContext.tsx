@@ -36,12 +36,12 @@ export const MovieContext = createContext<{
 });
 
 function normalizeText(texto: string): string {
-    let slug: string = texto.toLowerCase();
-    slug = slug.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    slug = slug.replace(/[^a-z0-9]+/g, "_");
-    slug = slug.replace(/^_+|_+$/g, "");
+  let slug: string = texto.toLowerCase();
+  slug = slug.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  slug = slug.replace(/[^a-z0-9]+/g, "_");
+  slug = slug.replace(/^_+|_+$/g, "");
 
-    return slug;
+  return slug;
 }
 
 export const MovieProvider = ({ children }: { children: React.ReactNode }) => {
@@ -74,9 +74,15 @@ export const MovieProvider = ({ children }: { children: React.ReactNode }) => {
     }
     const fileSplit = movie.coverFile.name.split(".");
 
-    const filename = `${normalizeText(movie.title)}.${
+    const filename = `${crypto.randomUUID()}.${
       movie.coverFile.name.split(".")[fileSplit.length - 1]
     }`;
+
+    // archivo no mayor a 3mb
+    if (movie.coverFile.size > 3 * 10 ** 6) {
+      toast.error("Archivo del cover muy pesado");
+      return;
+    }
 
     const { data, error } = await supabase
       .from("movies")

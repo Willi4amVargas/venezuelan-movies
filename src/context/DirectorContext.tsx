@@ -41,7 +41,6 @@ export const DirectorProvider = ({
       return;
     }
 
-    console.log("Created director:", data);
     toast.success("Director creado con exito");
     await getDirectors();
   };
