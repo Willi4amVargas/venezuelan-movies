@@ -1,9 +1,10 @@
 import { createContext, useContext, useState } from "react";
-import type { TablesInsert } from "db";
+import type { Tables, TablesInsert } from "db";
 import { supabase } from "@/lib/supabase";
 import { toast } from "react-toastify";
 import type { QueryData } from "@supabase/supabase-js";
 import { AddImageToBucket, GetImageUrl } from "@/lib/bucket";
+import { useUser } from "@/context/UserContext";
 
 interface optionalData {
   director?: boolean;
@@ -14,6 +15,10 @@ export type MoviesWithDirector = QueryData<typeof moviesWithDirector>;
 export type MovieWithDirector = MoviesWithDirector[number];
 
 export interface MovieWithDirectorAndCoverUrl extends MovieWithDirector {
+  coverUrl?: string;
+}
+
+export interface MovieWithCoverUrl extends Tables<"movies"> {
   coverUrl?: string;
 }
 
@@ -47,6 +52,31 @@ function normalizeText(texto: string): string {
 export const MovieProvider = ({ children }: { children: React.ReactNode }) => {
   const [movies, setMovies] = useState<MovieWithDirectorAndCoverUrl[]>();
   const [newMovie, setMovieNew] = useState<InsertMovieData>();
+  const { user } = useUser();
+
+  async function MovieCreatedBy(movie: Tables<"movies">): Promise<void> {
+    try {
+      if (!user.user) {
+        toast.error(
+          "Tienes que iniciar sesión para acceder registrar una pelicula"
+        );
+        return;
+      }
+      const { data, error } = await supabase.from("movies_creator").insert({
+        user_id: user.user.id,
+        movie_id: movie.id,
+      });
+
+      if (error) {
+        toast.error(error.details);
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error);
+      return;
+    }
+  }
 
   const getMovies = async (optionalData?: optionalData) => {
     const { data, error } = await moviesWithDirector;
@@ -68,6 +98,11 @@ export const MovieProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const createMovie = async (movie: InsertMovieData): Promise<void> => {
+    if (!user.user) {
+      toast.error("Tienes que iniciar sesión para agregar una pelicula");
+      return;
+    }
+
     if (!movie.coverFile) {
       console.log("No cover file provided");
       return;
@@ -96,13 +131,15 @@ export const MovieProvider = ({ children }: { children: React.ReactNode }) => {
         synopsis: movie.synopsis,
       })
       .select();
-    await AddImageToBucket(filename, movie.coverFile);
 
     if (error) {
       toast.error(error.message);
       return;
     }
+    await AddImageToBucket(filename, movie.coverFile);
+    data.forEach(async (mov) => await MovieCreatedBy(mov));
 
+    // para actualizar el estado global de las peliculas
     await getMovies();
     toast.success("Pelicula creada con exito");
   };

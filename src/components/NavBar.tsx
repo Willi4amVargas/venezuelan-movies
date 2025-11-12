@@ -116,10 +116,11 @@ export function NavBar() {
             <PopoverContent>
               {user && user.user && user.session ? (
                 <div className="flex justify-between">
-                  <span className="w-9 h-9 shrink-0 rounded-full bg-primary/10 flex items-center justify-center font-bold text-xl text-primary border border-primary">
+                  <Link to={"/user"} className="w-9 h-9 shrink-0 rounded-full bg-primary/10 flex items-center justify-center font-bold text-xl text-primary border border-primary">
                     {user.user.email.charAt(0)}
-                  </span>
+                  </Link>
                   <SignOut />
+
                 </div>
               ) : (
                 <div className="flex justify-between ">

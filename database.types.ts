@@ -146,6 +146,29 @@ export type Database = {
           },
         ]
       }
+      movies_creator: {
+        Row: {
+          movie_id: number
+          user_id: string
+        }
+        Insert: {
+          movie_id?: number
+          user_id: string
+        }
+        Update: {
+          movie_id?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "movies_creator_movie_id_fkey"
+            columns: ["movie_id"]
+            isOneToOne: false
+            referencedRelation: "movies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

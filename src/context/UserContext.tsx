@@ -1,5 +1,7 @@
+import { GetImageUrl } from "@/lib/bucket";
 import { supabase } from "@/lib/supabase";
 import type {
+  QueryData,
   Session,
   SignInWithPasswordCredentials,
   SignUpWithPasswordCredentials,
@@ -8,6 +10,7 @@ import type {
 } from "@supabase/supabase-js";
 import { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import type { MovieWithCoverUrl } from "@/context/MoviesContext";
 
 export const UserContext = createContext<{
   user: {
@@ -15,6 +18,8 @@ export const UserContext = createContext<{
     session: Session;
     weakPassword?: WeakPassword;
   };
+  approvedMovies: MovieWithCoverUrl[];
+  getApprovedMovies: () => Promise<void>;
   SignIn: (userData: SignInWithPasswordCredentials) => Promise<void>;
   SignUp: (userData: SignUpWithPasswordCredentials) => Promise<void>;
   SignOut: () => Promise<void>;
@@ -23,6 +28,8 @@ export const UserContext = createContext<{
   SignIn: async (userData: SignInWithPasswordCredentials) => {},
   SignUp: async (userData: SignUpWithPasswordCredentials) => {},
   SignOut: async () => {},
+  approvedMovies: undefined,
+  getApprovedMovies: async () => {},
 });
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
@@ -31,6 +38,9 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     session: Session;
     weakPassword?: WeakPassword;
   }>();
+
+  const [approvedMovies, setApprovedMovies] = useState<MovieWithCoverUrl[]>();
+
   const SignIn = async (
     userData: SignInWithPasswordCredentials
   ): Promise<void> => {
@@ -56,7 +66,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       return;
     }
 
-    console.log("USUARIO REGISTRADO ", data);
     setUser({
       user: data.user,
       session: data.session,
@@ -76,6 +85,41 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     toast.info("Sesión cerrada correctamente");
   };
 
+  const getApprovedMovies = async () => {
+    try {
+      if (!user.user) {
+        toast.info(
+          "Inicia sesión o registrate para ver las peliculas que creaste"
+        );
+        return;
+      }
+      const { data, error } = await supabase
+        .from("movies_creator")
+        .select("*, movies (*)")
+        .eq("user_id", user.user.id);
+
+      const moviesWithUrls = await Promise.all(
+        data.map(async (m) => {
+          const coverUrl = await GetImageUrl(m.movies.cover);
+          return {
+            ...m,
+            movies: {
+              ...m.movies,
+              coverUrl: coverUrl,
+            },
+          };
+        })
+      );
+
+      setApprovedMovies(moviesWithUrls.map((mov) => mov.movies));
+
+      console.log(data);
+    } catch (error) {
+      toast.error(error);
+      return;
+    }
+  };
+
   useEffect(() => {
     (async () => {
       const { data: user, error: errorUser } = await supabase.auth.getUser();
@@ -87,7 +131,16 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, SignIn, SignUp, SignOut }}>
+    <UserContext.Provider
+      value={{
+        user,
+        SignIn,
+        SignUp,
+        SignOut,
+        approvedMovies,
+        getApprovedMovies,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );

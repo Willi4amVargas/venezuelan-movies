@@ -11,6 +11,7 @@ import { RDirector } from "@/pages/Director/RDirector";
 import { Movie } from "@/pages/Movies/components/Movie";
 import { SignIn } from "@/pages/User/SignIn";
 import { SignUp } from "@/pages/User/SignUp";
+import { User } from "@/pages/User/User";
 
 export default function App() {
   return (
@@ -29,6 +30,7 @@ export default function App() {
             <Route path="cdirector" element={<CDirector />} />
             <Route path="rdirector" element={<RDirector />} />
             <Route path="user">
+              <Route index element={<User />} />
               <Route path="login" element={<SignIn />} />
               <Route path="signup" element={<SignUp />} />
             </Route>
