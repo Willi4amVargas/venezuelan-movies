@@ -25,7 +25,6 @@ export function Movie() {
   useEffect(() => {
     if (movie) {
       getMovieGenders(movie.id);
-      console.log("Generos cargados");
     }
   }, [movie]);
 
