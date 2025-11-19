@@ -10,7 +10,12 @@ interface optionalData {
   director?: boolean;
 }
 
-const moviesWithDirector = supabase.from("movies").select(`*, director (*)`);
+const moviesWithDirector = supabase
+  .from("movies")
+  .select(`*, director (*)`)
+  .order("description", {
+    ascending: true,
+  });
 export type MoviesWithDirector = QueryData<typeof moviesWithDirector>;
 export type MovieWithDirector = MoviesWithDirector[number];
 
@@ -22,8 +27,12 @@ export interface MovieWithCoverUrl extends Tables<"movies"> {
   coverUrl?: string;
 }
 
+interface GenderType {
+  genderId: number;
+}
 interface InsertMovieData extends TablesInsert<"movies"> {
   coverFile: File | null;
+  gender?: GenderType[];
 }
 
 export const MovieContext = createContext<{
@@ -56,16 +65,33 @@ export const MovieProvider = ({ children }: { children: React.ReactNode }) => {
 
   async function MovieCreatedBy(movie: Tables<"movies">): Promise<void> {
     try {
-      if (!user.user) {
-        toast.error(
-          "Tienes que iniciar sesión para acceder registrar una pelicula"
-        );
-        return;
-      }
       const { data, error } = await supabase.from("movies_creator").insert({
         user_id: user.user.id,
         movie_id: movie.id,
       });
+
+      if (error) {
+        toast.error(error.details);
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error);
+      return;
+    }
+  }
+
+  async function MovieGenders(
+    movie: Tables<"movies">,
+    genders: GenderType[]
+  ): Promise<void> {
+    try {
+      const { data, error } = await supabase.from("movie_gender").insert(
+        genders.map((gen) => ({
+          gender_id: gen.genderId,
+          movie_id: movie.id,
+        }))
+      );
 
       if (error) {
         toast.error(error.details);
@@ -138,6 +164,7 @@ export const MovieProvider = ({ children }: { children: React.ReactNode }) => {
     }
     await AddImageToBucket(filename, movie.coverFile);
     data.forEach(async (mov) => await MovieCreatedBy(mov));
+    data.forEach(async (mov) => await MovieGenders(mov, movie.gender));
 
     // para actualizar el estado global de las peliculas
     await getMovies();

@@ -5,6 +5,7 @@ import { Outlet } from "react-router";
 import { NavBar } from "@/components/NavBar";
 import { DirectorProvider } from "@/context/DirectorContext";
 import { UserProvider } from "@/context/UserContext";
+import { GenderProvider } from "@/context/GenderContext";
 
 export function ContextLayout() {
   return (
@@ -12,11 +13,13 @@ export function ContextLayout() {
       <UserProvider>
         <MovieProvider>
           <DirectorProvider>
-            <div className="flex h-dvh">
-              <NavBar />
-              <Outlet />
-            </div>
-            <ToastContainer position="bottom-right" />
+            <GenderProvider>
+              <div className="flex h-dvh">
+                <NavBar />
+                <Outlet />
+              </div>
+              <ToastContainer position="bottom-right" />
+            </GenderProvider>
           </DirectorProvider>
         </MovieProvider>
       </UserProvider>

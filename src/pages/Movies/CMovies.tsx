@@ -25,10 +25,15 @@ import { toast } from "react-toastify";
 import { FaSave } from "react-icons/fa"; // Íconos actualizados
 import { FiClock, FiCalendar, FiBookOpen } from "react-icons/fi";
 import { FaCirclePlus } from "react-icons/fa6";
+import { useGender } from "@/context/GenderContext";
+import { Badge } from "@/components/ui/badge";
+
+const badgeColors = ["default", "outline", "secondary", "destructive"] as const;
 
 export function CMovies() {
   const { newMovie, setNewMovie, createMovie } = useMovie();
   const { directors, getDirectors } = useDirector();
+  const { genders, getGenders } = useGender();
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,7 +69,7 @@ export function CMovies() {
     }
 
     await createMovie(newMovie);
-    setNewMovie(undefined)
+    setNewMovie(undefined);
   };
 
   useEffect(() => {
@@ -72,6 +77,12 @@ export function CMovies() {
       getDirectors();
     }
   }, [directors]);
+
+  useEffect(() => {
+    if (!genders) {
+      getGenders();
+    }
+  }, [genders]);
 
   return (
     <section className="flex justify-center items-center p-4 md:p-8 w-full">
@@ -177,6 +188,7 @@ export function CMovies() {
             </div>
 
             <div className="space-y-2">
+              {/* Esto deberia ser un upsert (registrar/buscar) */}
               <Label htmlFor="director">Director</Label>
               <div className="flex items-center space-x-3">
                 <Select
@@ -216,6 +228,65 @@ export function CMovies() {
                 </Link>
               </div>
             </div>
+            {newMovie && (
+              <div>
+                <Label>Generos</Label>
+                <Select
+                  onValueChange={(value) => {
+                    if (!newMovie.gender) {
+                      setNewMovie({
+                        ...newMovie,
+                        gender: [{ genderId: +value }],
+                      });
+                      return;
+                    }
+
+                    if (
+                      newMovie.gender.filter((a) => a.genderId === +value)
+                        .length <= 0
+                    ) {
+                      setNewMovie({
+                        ...newMovie,
+                        gender: [...newMovie.gender, { genderId: +value }],
+                      });
+                      return;
+                    }
+                  }}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Seleccione los generos de la pelicula..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="-1" disabled>
+                      Seleccione los generos...
+                    </SelectItem>
+                    {genders &&
+                      genders.map((gender) => (
+                        <SelectItem
+                          key={"GENDER-" + gender.id}
+                          value={gender.id.toString()}
+                        >
+                          {gender.description}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+            {newMovie && newMovie.gender && (
+              <div>
+                {newMovie.gender.map((gen, index) => {
+                  return (
+                    <Badge
+                      variant={badgeColors[index % badgeColors.length]}
+                      className="mx-1"
+                    >
+                      {genders.find((e) => e.id == gen.genderId).description}
+                    </Badge>
+                  );
+                })}
+              </div>
+            )}
             <Button
               type="submit"
               className="w-full mt-4 h-10 text-lg font-semibold"

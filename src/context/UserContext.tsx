@@ -25,10 +25,10 @@ export const UserContext = createContext<{
   SignOut: () => Promise<void>;
 }>({
   user: undefined,
+  approvedMovies: undefined,
   SignIn: async (userData: SignInWithPasswordCredentials) => {},
   SignUp: async (userData: SignUpWithPasswordCredentials) => {},
   SignOut: async () => {},
-  approvedMovies: undefined,
   getApprovedMovies: async () => {},
 });
 
@@ -114,6 +114,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       setApprovedMovies(moviesWithUrls.map((mov) => mov.movies));
 
       console.log(data);
+      return;
     } catch (error) {
       toast.error(error);
       return;

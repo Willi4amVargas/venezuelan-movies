@@ -8,16 +8,26 @@ import { FiClock, FiCalendar, FiUser, FiFilm } from "react-icons/fi";
 import { IoArrowBackOutline } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
+import { useGender } from "@/context/GenderContext";
+import { FaTags } from "react-icons/fa";
 
 export function Movie() {
   let { id } = useParams();
   const { movies, getMovies } = useMovie();
+  const { movieGenders, getMovieGenders } = useGender();
 
   useEffect(() => {
     if (!movies) getMovies();
-  }, [movies, getMovies]);
+  }, [movies]);
 
   const movie = movies?.find((m) => m.id === +id);
+
+  useEffect(() => {
+    if (movie) {
+      getMovieGenders(movie.id);
+      console.log("Generos cargados");
+    }
+  }, [movie]);
 
   if (!movie) {
     return (
@@ -70,6 +80,25 @@ export function Movie() {
                   </Badge>
                 </div>
               </CardHeader>
+              {movieGenders && movieGenders.length > 0 && (
+                <div className="space-y-3 pt-2">
+                  <h3 className="text-lg font-semibold text-primary flex items-center space-x-2">
+                    <FaTags size={16} /> <span>Géneros</span>
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {movieGenders.map((genre) => (
+                      <Badge
+                        key={genre.id}
+                        variant="outline"
+                        className="text-sm font-medium border-primary text-primary"
+                      >
+                        {genre.description}
+                      </Badge>
+                    ))}
+                  </div>
+                  <Separator />
+                </div>
+              )}
 
               <CardContent className="p-0 space-y-4">
                 <h3 className="text-lg font-semibold text-primary">

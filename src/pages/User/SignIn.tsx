@@ -27,12 +27,12 @@ export function SignIn() {
     sending: false,
   });
 
-  const [email, setEmail] = useState<string>();
-  const [password, setPassword] = useState<string>();
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email && password) {
+    if (email !== "" && password !== "") {
       setFormState({
         sending: true,
       });

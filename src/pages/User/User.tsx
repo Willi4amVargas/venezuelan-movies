@@ -10,7 +10,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { FiFilm, FiCalendar } from "react-icons/fi";
 import { PiImageSquareFill } from "react-icons/pi";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useUser } from "@/context/UserContext";
 
 function MovieComponent(movie: MovieWithCoverUrl) {
@@ -52,13 +52,18 @@ function MovieComponent(movie: MovieWithCoverUrl) {
 }
 
 export function User() {
-  const { approvedMovies, getApprovedMovies } = useUser();
+  const { user, approvedMovies, getApprovedMovies } = useUser();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!approvedMovies) {
       getApprovedMovies();
     }
   }, [approvedMovies]);
+
+  useEffect(() => {
+    if (!user) navigate("/user/login");
+  }, [user]);
 
   return (
     <section className="p-4 md:p-8 w-full">
@@ -72,9 +77,13 @@ export function User() {
               <MovieComponent {...movie} />
             </Link>
           ))
-        ) : (
+        ) : user ? (
           <p className="w-full col-span-full text-center text-muted-foreground">
             Cargando películas...
+          </p>
+        ) : (
+          <p className="w-full col-span-full text-center text-red-500">
+            Tienes que iniciar sesión para ver esto
           </p>
         )}
       </div>

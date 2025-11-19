@@ -12,6 +12,7 @@ import { Movie } from "@/pages/Movies/components/Movie";
 import { SignIn } from "@/pages/User/SignIn";
 import { SignUp } from "@/pages/User/SignUp";
 import { User } from "@/pages/User/User";
+import { Redirect } from "./components/Redirect";
 
 export default function App() {
   return (
@@ -25,7 +26,10 @@ export default function App() {
               <Route index element={<RMovies />} />
               <Route path=":id" element={<Movie />} />
             </Route>
-            <Route path="umovies" element={<UMovies />} />
+            <Route path="umovies">
+              <Route index element={<Redirect url="/rmovies" />} />
+              <Route path=":id" element={<UMovies />} />
+            </Route>
             <Route path="dmovies" element={<DMovies />} />
             <Route path="cdirector" element={<CDirector />} />
             <Route path="rdirector" element={<RDirector />} />
