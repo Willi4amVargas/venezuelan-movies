@@ -21,6 +21,7 @@ export function RMovies({ adminView }: { adminView?: boolean }) {
       id: movieId,
       movie: { state: parseInt(newState) },
     });
+    getMovies();
   };
 
   useEffect(() => {

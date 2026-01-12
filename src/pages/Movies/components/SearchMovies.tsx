@@ -11,7 +11,7 @@ import { useMovie } from "@/context/MoviesContext";
 import { useEffect, useState } from "react";
 
 export function SearchMovies({ adminView }: { adminView?: boolean }) {
-  const { getMovies, movies } = useMovie();
+  const { getMovies } = useMovie();
   const { genders, getGenders } = useGender();
 
   const [searchValue, setSearchValue] = useState<string>("");
@@ -35,7 +35,7 @@ export function SearchMovies({ adminView }: { adminView?: boolean }) {
     }, 400);
 
     return () => clearTimeout(debounceId);
-  }, [movies, searchValue, selectState, adminView]);
+  }, [searchValue, selectState, adminView]);
 
   useEffect(() => {
     if (!genders) getGenders();
