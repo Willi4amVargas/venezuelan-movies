@@ -46,6 +46,7 @@ export function SearchMovies({ adminView }: { adminView?: boolean }) {
       <Input
         type="text"
         placeholder="Busca aqui la pelicula..."
+        className="bg-slate-100/80"
         value={searchValue}
         onChange={(e) => setSearchValue(e.target.value)}
       />

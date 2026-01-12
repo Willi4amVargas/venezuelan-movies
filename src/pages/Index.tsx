@@ -1,37 +1,81 @@
 import { Link } from "react-router";
+import { MessageSquare, PlusCircle, Search } from "lucide-react";
 
 export function Index() {
   return (
-    <>
-      <div className="min-h-screen w-full flex items-center justify-center p-4">
-        <header className="text-center max-w-4xl space-y-8">
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-yellow-400">
-            Cine Venezolano 🇻🇪
+    <div className="w-full flex flex-col items-center  text-slate-900">
+      <header className="w-full py-16 px-4 flex flex-col items-center text-center max-w-5xl space-y-8 mt-10">
+        <div className="space-y-4">
+          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight">
+            <span className="text-yellow-500">Cine</span>
+            <span className="text-blue-600"> Venezolano</span>
+            <span className="text-red-600 font-serif"> 🇻🇪</span>
           </h1>
-
-          <p className="text-xl md:text-3xl font-light text-black">
-            Un Viaje por la Historia, las Historias y las Voces de Nuestra
-            Tierra.
+          <p className="text-xl md:text-2xl font-medium text-slate-700 max-w-2xl mx-auto italic">
+            "El portal donde nuestra identidad se proyecta en la pantalla."
           </p>
+        </div>
 
-          <p className="text-base md:text-lg text-black leading-relaxed max-w-3xl mx-auto">
-            Descubre el corazón palpitante del cine hecho en Venezuela. Desde
-            los clásicos inmortales hasta las producciones contemporáneas que
-            están redefiniendo nuestra cultura cinematográfica. Explora
-            filmografías, noticias, festivales y dónde ver tus películas
-            favoritas.
-          </p>
+        <p className="text-lg md:text-xl text-slate-600 leading-relaxed max-w-3xl mx-auto">
+          Desde los clásicos de culto hasta las joyas independientes del
+          presente. Aquí no solo miras, tú construyes la memoria fílmica de
+          nuestro país.
+        </p>
 
-          <div className="pt-6">
-            <Link
-              to={"/rmovies"}
-              className="inline-block px-8 py-3 text-lg font-semibold rounded-full shadow-lg transition duration-300 bg-red-600 hover:bg-red-700 text-white transform hover:scale-105"
-            >
-              Explora Nuestro Catálogo
-            </Link>
+        <div className="flex flex-wrap justify-center gap-4 pt-4">
+          <Link
+            to="/rmovies"
+            className="px-8 py-4 text-lg font-bold rounded-xl shadow-xl transition-all bg-red-600 hover:bg-red-700 text-white hover:scale-105 active:scale-95"
+          >
+            Explorar Catálogo
+          </Link>
+          <Link
+            to="/cmovies"
+            className="px-8 py-4 text-lg font-bold rounded-xl border-2 border-slate-200 bg-slate-200/80 hover:border-blue-600 hover:text-blue-600 transition-all"
+          >
+            Proponer una Película
+          </Link>
+        </div>
+      </header>
+
+      <section className="w-full max-w-6xl px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center text-center space-y-4">
+          <div className="p-3 bg-yellow-100 rounded-full text-yellow-600">
+            <Search size={32} />
           </div>
-        </header>
-      </div>
-    </>
+          <h3 className="text-xl font-bold">Descubre Joyas</h3>
+          <p className="text-slate-500 text-sm">
+            Encuentra detalles técnicos y curiosidades de producciones
+            nacionales, desde cortometrajes hasta grandes éxitos.
+          </p>
+        </div>
+
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center text-center space-y-4">
+          <div className="p-3 bg-blue-100 rounded-full text-blue-600">
+            <PlusCircle size={32} />
+          </div>
+          <h3 className="text-xl font-bold">Haz tu Aporte</h3>
+          <p className="text-slate-500 text-sm">
+            ¿Falta una película que conoces? Agrégala a nuestra base de datos
+            para que otros puedan conocerla.
+          </p>
+        </div>
+
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center text-center space-y-4">
+          <div className="p-3 bg-red-100 rounded-full text-red-600">
+            <MessageSquare size={32} />
+          </div>
+          <h3 className="text-xl font-bold">Tu Opinión Cuenta</h3>
+          <p className="text-slate-500 text-sm">
+            Comenta, debate y valora las historias que nos representan. Crea
+            comunidad con otros cinéfilos.
+          </p>
+        </div>
+      </section>
+
+      <footer className="mt-auto py-10 text-slate-400 text-sm">
+        <p>© {new Date().getFullYear()} Comunidad de Cine Venezolano</p>
+      </footer>
+    </div>
   );
 }
