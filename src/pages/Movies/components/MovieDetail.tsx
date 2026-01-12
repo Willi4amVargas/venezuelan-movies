@@ -1,6 +1,5 @@
 import { useMovie } from "@/context/MoviesContext";
 import { useEffect } from "react";
-import { useParams } from "react-router";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -11,22 +10,22 @@ import { Link } from "react-router";
 import { useGender } from "@/context/GenderContext";
 import { FaTags } from "react-icons/fa";
 
-export function Movie() {
-  let { id } = useParams();
-  const { movies, getMovies } = useMovie();
+export function MovieDetail({
+  id,
+  redirectUrl,
+  redirectText,
+}: {
+  id: number;
+  redirectUrl?: string;
+  redirectText?: string;
+}) {
+  const { movie, getMovies } = useMovie();
   const { movieGenders, getMovieGenders } = useGender();
 
   useEffect(() => {
-    if (!movies) getMovies();
-  }, [movies]);
-
-  const movie = movies?.find((m) => m.id === +id);
-
-  useEffect(() => {
-    if (movie) {
-      getMovieGenders(movie.id);
-    }
-  }, [movie]);
+    getMovies({ id: id });
+    getMovieGenders(id);
+  }, []);
 
   if (!movie) {
     return (
@@ -41,10 +40,10 @@ export function Movie() {
   return (
     <div className="flex justify-center items-center w-full">
       <section className="p-4 md:p-8 w-full max-w-5xl mx-auto">
-        <Link to={"/rmovies"}>
+        <Link to={redirectUrl ? redirectUrl : "/rmovies"}>
           <Button variant="outline" className="mb-6">
             <IoArrowBackOutline size={20} className="mr-2" />
-            Volver al Catálogo
+            {redirectText ? redirectText : "Volver al Catálogo"}
           </Button>
         </Link>
 

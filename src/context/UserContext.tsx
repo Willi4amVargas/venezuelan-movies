@@ -10,26 +10,28 @@ import type {
 } from "@supabase/supabase-js";
 import { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import type { MovieWithCoverUrl } from "@/context/MoviesContext";
+import type { MovieWithDirectorAndCoverUrl } from "@/context/MoviesContext";
+
+export type IUser = {
+  user: User;
+  session: Session;
+  weakPassword?: WeakPassword;
+};
 
 export const UserContext = createContext<{
-  user: {
-    user: User;
-    session: Session;
-    weakPassword?: WeakPassword;
-  };
-  approvedMovies: MovieWithCoverUrl[];
-  getApprovedMovies: () => Promise<void>;
+  user: IUser;
+  userMovies: MovieWithDirectorAndCoverUrl[];
+  getUserMovies: () => Promise<void>;
   SignIn: (userData: SignInWithPasswordCredentials) => Promise<void>;
   SignUp: (userData: SignUpWithPasswordCredentials) => Promise<void>;
   SignOut: () => Promise<void>;
 }>({
   user: undefined,
-  approvedMovies: undefined,
+  userMovies: undefined,
   SignIn: async (userData: SignInWithPasswordCredentials) => {},
   SignUp: async (userData: SignUpWithPasswordCredentials) => {},
   SignOut: async () => {},
-  getApprovedMovies: async () => {},
+  getUserMovies: async () => {},
 });
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
@@ -39,7 +41,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     weakPassword?: WeakPassword;
   }>();
 
-  const [approvedMovies, setApprovedMovies] = useState<MovieWithCoverUrl[]>();
+  const [userMovies, setUserMovies] =
+    useState<MovieWithDirectorAndCoverUrl[]>();
 
   const SignIn = async (
     userData: SignInWithPasswordCredentials
@@ -85,7 +88,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     toast.info("Sesión cerrada correctamente");
   };
 
-  const getApprovedMovies = async () => {
+  const getUserMovies = async () => {
     try {
       if (!user.user) {
         toast.info(
@@ -95,7 +98,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       }
       const { data, error } = await supabase
         .from("movies_creator")
-        .select("*, movies (*)")
+        .select("*, movies(*, director (*))")
         .eq("user_id", user.user.id);
 
       const moviesWithUrls = await Promise.all(
@@ -111,9 +114,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         })
       );
 
-      setApprovedMovies(moviesWithUrls.map((mov) => mov.movies));
-
-      console.log(data);
+      setUserMovies(moviesWithUrls.map((mov) => mov.movies));
       return;
     } catch (error) {
       toast.error(error);
@@ -138,8 +139,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         SignIn,
         SignUp,
         SignOut,
-        approvedMovies,
-        getApprovedMovies,
+        userMovies,
+        getUserMovies,
       }}
     >
       {children}

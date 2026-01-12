@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import type { Tables, TablesInsert } from "db";
+import type { Tables, TablesInsert, TablesUpdate } from "db";
 import { supabase } from "@/lib/supabase";
 import { toast } from "react-toastify";
 import type { QueryData } from "@supabase/supabase-js";
@@ -7,6 +7,10 @@ import { AddImageToBucket, GetImageUrl } from "@/lib/bucket";
 import { useUser } from "@/context/UserContext";
 
 interface optionalData {
+  id?: number;
+  q?: string;
+  gender?: number;
+  state?: number;
   director?: boolean;
 }
 
@@ -23,10 +27,6 @@ export interface MovieWithDirectorAndCoverUrl extends MovieWithDirector {
   coverUrl?: string;
 }
 
-export interface MovieWithCoverUrl extends Tables<"movies"> {
-  coverUrl?: string;
-}
-
 interface GenderType {
   genderId: number;
 }
@@ -36,29 +36,31 @@ interface InsertMovieData extends TablesInsert<"movies"> {
 }
 
 export const MovieContext = createContext<{
+  movie: MovieWithDirectorAndCoverUrl | undefined;
   movies: MovieWithDirectorAndCoverUrl[] | undefined;
   newMovie: InsertMovieData;
   setNewMovie: (movie: InsertMovieData) => void;
   getMovies: (optionalData?: optionalData) => Promise<void>;
   createMovie: (movie: InsertMovieData) => Promise<void>;
+  updateMovie: ({
+    id,
+    movie,
+  }: {
+    id: number;
+    movie: TablesUpdate<"movies">;
+  }) => Promise<void>;
 }>({
+  movie: undefined,
   movies: undefined,
   newMovie: undefined,
   setNewMovie: (movie: InsertMovieData) => {},
   getMovies: async (optionalData?: optionalData) => {},
   createMovie: async () => {},
+  updateMovie: async () => {},
 });
 
-function normalizeText(texto: string): string {
-  let slug: string = texto.toLowerCase();
-  slug = slug.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  slug = slug.replace(/[^a-z0-9]+/g, "_");
-  slug = slug.replace(/^_+|_+$/g, "");
-
-  return slug;
-}
-
 export const MovieProvider = ({ children }: { children: React.ReactNode }) => {
+  const [movie, setMovie] = useState<MovieWithDirectorAndCoverUrl>();
   const [movies, setMovies] = useState<MovieWithDirectorAndCoverUrl[]>();
   const [newMovie, setMovieNew] = useState<InsertMovieData>();
   const { user } = useUser();
@@ -105,7 +107,32 @@ export const MovieProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   const getMovies = async (optionalData?: optionalData) => {
-    const { data, error } = await moviesWithDirector;
+    let query = supabase
+      .from("movies")
+      .select(`*, director (*)`) //, movie_gender!inner(*)`)
+      .order("description", {
+        ascending: true,
+      });
+
+    if (optionalData) {
+      if (optionalData.id) {
+        query = query.eq("id", optionalData.id);
+      }
+      if (optionalData.state) {
+        query = query.eq("state", optionalData.state);
+      }
+      if (optionalData.q && optionalData.q !== "") {
+        query = query.ilike("title", `%${optionalData.q}%`);
+      }
+      // if (
+      //   optionalData.gender &&
+      //   optionalData.gender !== undefined &&
+      //   optionalData.gender !== -1
+      // ) {
+      //   query = query.eq("movie_gender.gender_id", optionalData.gender);
+      // }
+    }
+    const { data, error } = await query;
 
     if (data) {
       const moviesWithUrls = await Promise.all(
@@ -117,7 +144,11 @@ export const MovieProvider = ({ children }: { children: React.ReactNode }) => {
           };
         })
       );
-      setMovies(moviesWithUrls);
+      if (optionalData?.id) {
+        setMovie(moviesWithUrls[0]);
+      } else {
+        setMovies(moviesWithUrls);
+      }
     }
 
     if (error) toast.error(error.details);
@@ -167,7 +198,8 @@ export const MovieProvider = ({ children }: { children: React.ReactNode }) => {
     data.forEach(async (mov) => await MovieGenders(mov, movie.gender));
 
     // para actualizar el estado global de las peliculas
-    await getMovies();
+    // No se necesita actualizar el estado inmediatamente ya que las peliculas necesitan aprobacion del administrador
+    // await getMovies();
     toast.success("Pelicula creada con exito");
   };
 
@@ -175,9 +207,39 @@ export const MovieProvider = ({ children }: { children: React.ReactNode }) => {
     // in case i need to modify before send... i think
     setMovieNew(movie);
   };
+
+  const updateMovie = async ({
+    id,
+    movie,
+  }: {
+    id: number;
+    movie: TablesUpdate<"movies">;
+  }): Promise<void> => {
+    const { data, error } = await supabase
+      .from("movies")
+      .update(movie)
+      .eq("id", id)
+      .select();
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
+    toast.success("Pelicula actualizada con exito");
+    return;
+  };
   return (
     <MovieContext.Provider
-      value={{ movies, newMovie, setNewMovie, getMovies, createMovie }}
+      value={{
+        movie,
+        movies,
+        newMovie,
+        setNewMovie,
+        getMovies,
+        createMovie,
+        updateMovie,
+      }}
     >
       {children}
     </MovieContext.Provider>

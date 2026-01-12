@@ -113,6 +113,7 @@ export type Database = {
           duration: number
           id: number
           release: string
+          state: number | null
           synopsis: string | null
           title: string
         }
@@ -123,6 +124,7 @@ export type Database = {
           duration: number
           id?: number
           release: string
+          state?: number | null
           synopsis?: string | null
           title: string
         }
@@ -133,6 +135,7 @@ export type Database = {
           duration?: number
           id?: number
           release?: string
+          state?: number | null
           synopsis?: string | null
           title?: string
         }
@@ -142,6 +145,13 @@ export type Database = {
             columns: ["director"]
             isOneToOne: false
             referencedRelation: "director"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "movies_state_fkey"
+            columns: ["state"]
+            isOneToOne: false
+            referencedRelation: "movies_state"
             referencedColumns: ["id"]
           },
         ]
@@ -168,6 +178,21 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      movies_state: {
+        Row: {
+          description: string
+          id: number
+        }
+        Insert: {
+          description: string
+          id?: number
+        }
+        Update: {
+          description?: string
+          id?: number
+        }
+        Relationships: []
       }
     }
     Views: {

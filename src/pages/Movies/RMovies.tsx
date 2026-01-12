@@ -1,90 +1,107 @@
-import {
-  useMovie,
-  type MovieWithDirectorAndCoverUrl,
-} from "@/context/MoviesContext";
+import { useMovie } from "@/context/MoviesContext";
 import { useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { FiFilm, FiCalendar, FiUser } from "react-icons/fi";
-import { PiImageSquareFill } from "react-icons/pi";
 import { Link } from "react-router";
+import { SearchMovies } from "@/pages/Movies/components/SearchMovies";
+import { MoviePreview } from "@/pages/Movies/components/MoviePreview";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { FaArrowLeft } from "react-icons/fa";
+import { Button } from "@/components/ui/button";
 
-function MovieComponent(movie: MovieWithDirectorAndCoverUrl) {
-  return (
-    <Card className="hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
-      <div className="relative w-full aspect-2/3 bg-muted flex items-center justify-center rounded-t-lg overflow-hidden">
-        <span className="text-muted-foreground text-sm font-semibold p-4 text-center">
-          {movie.coverUrl ? (
-            <img src={movie.coverUrl} alt={`MOVIE-${movie.title}`} />
-          ) : (
-            <PiImageSquareFill size={30} />
-          )}
-        </span>
-      </div>
+export function RMovies({ adminView }: { adminView?: boolean }) {
+  const { movies, getMovies, updateMovie } = useMovie();
 
-      <CardHeader className="grow pb-2">
-        <CardTitle className="text-xl font-bold flex items-center space-x-2">
-          <FiFilm className="text-primary" />
-          <span>{movie.title}</span>
-        </CardTitle>
-        <CardDescription className="line-clamp-3">
-          {movie.description}
-        </CardDescription>
-      </CardHeader>
-
-      <CardContent className="pt-2 pb-4 space-y-2 text-sm">
-        <div className="flex items-center space-x-2 text-muted-foreground">
-          <FiCalendar size={16} />
-          <p>
-            Año:
-            <Badge variant="secondary" className="font-semibold">
-              {movie.release}
-            </Badge>
-          </p>
-        </div>
-
-        <div className="flex items-center space-x-2 text-muted-foreground">
-          <FiUser size={16} />
-          <p>
-            Director:
-            <span className="font-medium text-foreground">
-              {movie.director.name}
-            </span>
-          </p>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-// Componente principal de la vista
-export function RMovies() {
-  const { movies, getMovies } = useMovie();
+  const handleStateChange = (movieId: number, newState: string) => {
+    updateMovie({
+      id: movieId,
+      movie: { state: parseInt(newState) },
+    });
+  };
 
   useEffect(() => {
-    if (!movies) getMovies();
-  }, [movies]);
+    if (adminView) {
+      getMovies();
+    } else {
+      getMovies({ state: 2 });
+    }
+  }, [adminView]);
 
   return (
     <section className="p-4 md:p-8 w-full">
       <h2 className="text-3xl font-extrabold mb-6 tracking-tight border-b pb-2">
-        🎥 Catálogo de Películas Venezolanas
+        {adminView
+          ? "🛠️ Gestión de Catálogo"
+          : "🎥 Catálogo de Películas Venezolanas"}
       </h2>
+
+      <div className="mb-6">
+        <SearchMovies adminView={adminView} />
+        {adminView && (
+          <Button asChild variant="link">
+            <Link to={"/user/admin"} className="flex items-center space-x-2">
+              <FaArrowLeft />
+              <span>Regresar al panel anterior</span>
+            </Link>
+          </Button>
+        )}
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-5">
         {movies ? (
           movies.map((movie) => (
-            <Link to={`/rmovies/${movie.id}`} key={`MOVIE-CARD-${movie.id}`}>
-              <MovieComponent {...movie} />
-            </Link>
+            <div
+              key={`MOVIE-CONTAINER-${movie.id}`}
+              className="flex flex-col space-y-2"
+            >
+              <Link
+                to={
+                  adminView
+                    ? `/user/admin/movies/${movie.id}`
+                    : `/rmovies/${movie.id}`
+                }
+                className="block transition-transform hover:scale-[1.02]"
+              >
+                <MoviePreview {...movie} />
+              </Link>
+
+              {adminView && (
+                <div className="mt-auto">
+                  <Select
+                    defaultValue={movie.state.toString()}
+                    onValueChange={(value) =>
+                      handleStateChange(movie.id, value)
+                    }
+                  >
+                    <SelectTrigger
+                      className={`w-full font-bold text-white border-none ${
+                        movie.state === 1
+                          ? "bg-orange-500 hover:bg-orange-600"
+                          : movie.state === 2
+                          ? "bg-green-600 hover:bg-green-700"
+                          : movie.state === 3
+                          ? "bg-red-600 hover:bg-red-700"
+                          : "bg-blue-500"
+                      }`}
+                    >
+                      <SelectValue placeholder="Cambiar estado" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">🟠 En Espera</SelectItem>
+                      <SelectItem value="2">🟢 Aceptado</SelectItem>
+                      <SelectItem value="3">🔴 Rechazado</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+            </div>
           ))
         ) : (
-          <p className="w-full col-span-full text-center text-muted-foreground">
+          <p className="w-full col-span-full text-center text-muted-foreground py-10">
             Cargando películas...
           </p>
         )}
