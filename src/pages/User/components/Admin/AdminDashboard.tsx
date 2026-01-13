@@ -7,7 +7,7 @@ export function AdminDashboard({ user }: { user: IUser }) {
       <section className="p-4 md:p-8 w-full">
         <h2 className="text-3xl font-extrabold mb-6 tracking-tight border-b pb-2 flex flex-col">
           <span>👑 Panel de Administrador</span>
-          <b className="text-sm pt-2 text-gray-400">
+          <b className="text-sm pt-2 text-black/50">
             <i>{user.user.email}</i>
           </b>
         </h2>
@@ -18,18 +18,18 @@ export function AdminDashboard({ user }: { user: IUser }) {
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-5 mt-6">
-          <Link
+          {/* <Link
             to={"/user/admin/users"}
-            className="p-4 border rounded-lg shadow hover:shadow-lg transition"
+            className="p-4 border rounded-lg shadow hover:shadow-lg transition bg-slate-200/80"
           >
             <h3 className="text-xl font-semibold mb-2">Gestión de Usuarios</h3>
             <p>
               Revisa y administra los usuarios registrados en la plataforma.
             </p>
-          </Link>
+          </Link> */}
           <Link
             to={"/user/admin/movies"}
-            className="p-4 border rounded-lg shadow hover:shadow-lg transition"
+            className="p-4 border rounded-lg shadow hover:shadow-lg transition bg-slate-200/80"
           >
             <h3 className="text-xl font-semibold mb-2">
               Revisión de Contenido

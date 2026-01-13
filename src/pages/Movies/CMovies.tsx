@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label"; // Importar Label de shadcn/ui
-import { Button } from "@/components/ui/button"; // Importar Button de shadcn/ui
-import { Textarea } from "@/components/ui/textarea"; // Para la descripción
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Card,
   CardContent,
@@ -15,14 +15,14 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"; // Para el selector de Director
+} from "@/components/ui/select";
 
 import { useDirector } from "@/context/DirectorContext";
 import { useMovie } from "@/context/MoviesContext";
 import { useEffect } from "react";
 import { Link } from "react-router";
 import { toast } from "react-toastify";
-import { FaSave } from "react-icons/fa"; // Íconos actualizados
+import { FaSave } from "react-icons/fa";
 import { FiClock, FiCalendar, FiBookOpen } from "react-icons/fi";
 import { FaCirclePlus } from "react-icons/fa6";
 import { useGender } from "@/context/GenderContext";

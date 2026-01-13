@@ -7,6 +7,7 @@ export function AdminLayout() {
   const { user } = useUser();
   const navigate = useNavigate();
 
+  // hay mejores maneras de hacer esto...
   useEffect(() => {
     if (
       (user &&

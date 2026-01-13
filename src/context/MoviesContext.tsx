@@ -62,7 +62,7 @@ export const MovieContext = createContext<{
 export const MovieProvider = ({ children }: { children: React.ReactNode }) => {
   const [movie, setMovie] = useState<MovieWithDirectorAndCoverUrl>();
   const [movies, setMovies] = useState<MovieWithDirectorAndCoverUrl[]>();
-  const [newMovie, setMovieNew] = useState<InsertMovieData>();
+  const [newMovie, setNewMovie] = useState<InsertMovieData>();
   const { user } = useUser();
 
   async function MovieCreatedBy(movie: Tables<"movies">): Promise<void> {
@@ -203,10 +203,6 @@ export const MovieProvider = ({ children }: { children: React.ReactNode }) => {
     toast.success("Pelicula creada con exito");
   };
 
-  const setNewMovie = (movie: InsertMovieData): void => {
-    // in case i need to modify before send... i think
-    setMovieNew(movie);
-  };
 
   const updateMovie = async ({
     id,
