@@ -116,6 +116,7 @@ export type Database = {
           state: number | null
           synopsis: string | null
           title: string
+          trailer: string | null
         }
         Insert: {
           cover?: string | null
@@ -127,6 +128,7 @@ export type Database = {
           state?: number | null
           synopsis?: string | null
           title: string
+          trailer?: string | null
         }
         Update: {
           cover?: string | null
@@ -138,6 +140,7 @@ export type Database = {
           state?: number | null
           synopsis?: string | null
           title?: string
+          trailer?: string | null
         }
         Relationships: [
           {
@@ -179,6 +182,39 @@ export type Database = {
           },
         ]
       }
+      movies_people: {
+        Row: {
+          id: string
+          movie_id: number
+          people_id: number
+        }
+        Insert: {
+          id?: string
+          movie_id: number
+          people_id: number
+        }
+        Update: {
+          id?: string
+          movie_id?: number
+          people_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "movies_people_movie_id_fkey"
+            columns: ["movie_id"]
+            isOneToOne: false
+            referencedRelation: "movies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "movies_people_people_id_fkey"
+            columns: ["people_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       movies_state: {
         Row: {
           description: string
@@ -193,6 +229,97 @@ export type Database = {
           id?: number
         }
         Relationships: []
+      }
+      people: {
+        Row: {
+          biography: string | null
+          birth: string | null
+          created_at: string
+          id: number
+          last_name: string | null
+          name: string
+          type: number
+        }
+        Insert: {
+          biography?: string | null
+          birth?: string | null
+          created_at?: string
+          id?: number
+          last_name?: string | null
+          name: string
+          type?: number
+        }
+        Update: {
+          biography?: string | null
+          birth?: string | null
+          created_at?: string
+          id?: number
+          last_name?: string | null
+          name?: string
+          type?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "people_type_fkey"
+            columns: ["type"]
+            isOneToOne: false
+            referencedRelation: "people_type"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      people_type: {
+        Row: {
+          created_at: string
+          description: string
+          id: number
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: number
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: number
+        }
+        Relationships: []
+      }
+      review: {
+        Row: {
+          created_at: string
+          description: string
+          id: number
+          movie: number | null
+          user: string | null
+          username: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: number
+          movie?: number | null
+          user?: string | null
+          username: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: number
+          movie?: number | null
+          user?: string | null
+          username?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_movie_fkey"
+            columns: ["movie"]
+            isOneToOne: false
+            referencedRelation: "movies"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

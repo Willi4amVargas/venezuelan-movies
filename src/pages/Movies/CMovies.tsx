@@ -102,7 +102,7 @@ export function CMovies() {
               <Label htmlFor="title">Título</Label>
               <Input
                 id="title"
-                placeholder="Ej. Secuestro Express"
+                placeholder="Ej. El Libertador"
                 value={newMovie?.title || ""}
                 onChange={(e) =>
                   setNewMovie({ ...newMovie, title: e.currentTarget.value })

@@ -6,21 +6,27 @@ import { NavBar } from "@/components/NavBar";
 import { DirectorProvider } from "@/context/DirectorContext";
 import { UserProvider } from "@/context/UserContext";
 import { GenderProvider } from "@/context/GenderContext";
+import { PeopleProvider } from "./context/PeopleContext";
+import { ReviewProvider } from "./context/ReviewsContext";
 
 export function ContextLayout() {
   return (
     <>
       <UserProvider>
         <MovieProvider>
-          <DirectorProvider>
-            <GenderProvider>
-              <div className="flex h-dvh">
-                <NavBar />
-                <Outlet />
-              </div>
-              <ToastContainer position="bottom-right" />
-            </GenderProvider>
-          </DirectorProvider>
+          <ReviewProvider>
+            <PeopleProvider>
+              <DirectorProvider>
+                <GenderProvider>
+                  <div className="flex h-dvh">
+                    <NavBar />
+                    <Outlet />
+                  </div>
+                  <ToastContainer position="bottom-right" />
+                </GenderProvider>
+              </DirectorProvider>
+            </PeopleProvider>
+          </ReviewProvider>
         </MovieProvider>
       </UserProvider>
     </>

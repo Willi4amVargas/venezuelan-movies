@@ -13,6 +13,7 @@ import {
 import { useUser } from "@/context/UserContext";
 import { useState } from "react";
 import { FiUserPlus, FiMail, FiLock } from "react-icons/fi";
+import { CiUser } from "react-icons/ci";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 
@@ -27,6 +28,7 @@ export function SignUp() {
     sending: false,
   });
 
+  const [username, setUsername] = useState<string>();
   const [email, setEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [confirmPassword, setConfirmPassword] = useState<string>();
@@ -46,7 +48,7 @@ export function SignUp() {
     setFormState({
       sending: true,
     });
-    await SignUp({ email, password });
+    await SignUp({ email, password, options: { data: { username } } });
     setFormState({
       sending: false,
     });
@@ -68,6 +70,21 @@ export function SignUp() {
 
         <CardContent>
           <form onSubmit={onSubmit} className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="username" className="flex items-center space-x-1">
+                <CiUser size={14} />
+                <span>Nombre de usuario</span>
+              </Label>
+              <Input
+                id="username"
+                type="text"
+                placeholder="mi_usuario"
+                value={username}
+                onChange={(e) => setUsername(e.currentTarget.value)}
+                required
+                disabled={formState.sending}
+              />
+            </div>
             <div className="grid gap-2">
               <Label htmlFor="email" className="flex items-center space-x-1">
                 <FiMail size={14} />

@@ -151,11 +151,12 @@ export function NavBar() {
             <div className="space-y-3">
               <div className="flex items-center space-x-3 px-2">
                 <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold border-2 border-background">
-                  {user.user.email?.charAt(0).toUpperCase()}
+                  {user.user.user_metadata.username?.charAt(0).toUpperCase() ||
+                    user.user.email?.charAt(0).toUpperCase()}
                 </div>
                 <div className="flex-1 overflow-hidden">
                   <p className="text-sm font-semibold truncate">
-                    {user.user.email}
+                    {user.user.user_metadata.username || user.user.email}
                   </p>
                   <Link
                     to="/user"

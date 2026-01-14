@@ -1,14 +1,15 @@
 import { useDirector } from "@/context/DirectorContext";
 import { useEffect } from "react";
 import { DirectorPreview } from "@/pages/Director/components/DirectorPreview";
+import { usePeople } from "@/context/PeopleContext";
 
 // Componente principal de la vista
 export function RDirector() {
-  const { directors, getDirectors } = useDirector();
+  const { peoples, getPeoples } = usePeople();
 
   useEffect(() => {
-    if (!directors) getDirectors();
-  }, [directors]);
+    if (!peoples) getPeoples({people_type:1});
+  }, [getPeoples]);
 
   return (
     <section className="p-4 md:p-8 w-full">
@@ -16,8 +17,8 @@ export function RDirector() {
         👤 Directores Venezolanos
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {directors ? (
-          directors.map((director) => (
+        {peoples ? (
+          peoples.map((director) => (
             <DirectorPreview
               key={`DIRECTOR-${director.id}`}
               director={director}

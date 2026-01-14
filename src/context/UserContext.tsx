@@ -35,11 +35,7 @@ export const UserContext = createContext<{
 });
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<{
-    user: User;
-    session: Session;
-    weakPassword?: WeakPassword;
-  }>();
+  const [user, setUser] = useState<IUser>();
 
   const [userMovies, setUserMovies] =
     useState<MovieWithDirectorAndCoverUrl[]>();
