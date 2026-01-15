@@ -1,6 +1,7 @@
 import { useReview } from "@/context/ReviewsContext";
 import { useEffect } from "react";
 import { FiMessageSquare, FiCalendar, FiStar } from "react-icons/fi";
+import { CReview } from "./CReviews";
 
 export function RReviews({ movie_id }: { movie_id: number }) {
   const { reviews, getReviews } = useReview();
@@ -28,9 +29,7 @@ export function RReviews({ movie_id }: { movie_id: number }) {
             ({reviews?.length || 0})
           </span>
         </h3>
-        <button className="text-[#f07c42] text-sm font-bold border-b border-[#f07c42]/20 hover:border-[#f07c42] transition-all">
-          Escribir una reseña
-        </button>
+        <CReview movie_id={movie_id}/>
       </div>
 
       <div className="space-y-6">

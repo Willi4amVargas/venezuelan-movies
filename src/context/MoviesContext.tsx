@@ -109,7 +109,7 @@ export const MovieProvider = ({ children }: { children: React.ReactNode }) => {
   const getMovies = async (optionalData?: optionalData) => {
     let query = supabase
       .from("movies")
-      .select(`*, director (*)`) //, movie_gender!inner(*)`)
+      .select(`*, director (*)`)
       .order("description", {
         ascending: true,
       });
@@ -124,13 +124,6 @@ export const MovieProvider = ({ children }: { children: React.ReactNode }) => {
       if (optionalData.q && optionalData.q !== "") {
         query = query.ilike("title", `%${optionalData.q}%`);
       }
-      // if (
-      //   optionalData.gender &&
-      //   optionalData.gender !== undefined &&
-      //   optionalData.gender !== -1
-      // ) {
-      //   query = query.eq("movie_gender.gender_id", optionalData.gender);
-      // }
     }
     const { data, error } = await query;
 

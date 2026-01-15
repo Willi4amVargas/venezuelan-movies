@@ -95,7 +95,7 @@ export function NavBar() {
                     className={linkClass("/cmovies")}
                     onClick={() => setIsOpen(false)}
                   >
-                    Agregar
+                    Proponer
                   </Link>
                   <Link
                     to="/rmovies"

@@ -90,8 +90,13 @@ export function MovieDetail({
               </h2>
 
               <div className="flex flex-wrap gap-4">
-                <Button className="bg-[#f07c42] hover:bg-[#f07c42]/90 text-[#131315] font-bold px-8 py-6 rounded-xl text-lg">
-                  <FiPlay className="mr-2 fill-current" /> Ver Trailer
+                <Button
+                  asChild
+                  className="bg-[#f07c42] hover:bg-[#f07c42]/90 text-[#131315] font-bold px-8 py-6 rounded-xl text-lg"
+                >
+                  <a href={movie.trailer} target="_blank">
+                    <FiPlay className="mr-2 fill-current" /> Ver Trailer
+                  </a>
                 </Button>
                 <Button
                   variant="outline"

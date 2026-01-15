@@ -90,7 +90,7 @@ export function CMovies() {
         <CardHeader>
           <CardTitle className="text-3xl flex items-center space-x-2">
             <FaSave className="text-primary" />
-            <span>Registrar Nueva Película</span>
+            <span>Proponer Nueva Película</span>
           </CardTitle>
           <CardDescription>
             Introduce los detalles y la carátula de la película venezolana.

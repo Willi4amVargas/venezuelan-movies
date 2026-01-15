@@ -56,7 +56,7 @@ export function SearchMovies({ adminView }: { adminView?: boolean }) {
           value={selectState.toString()}
           onValueChange={(value) => setSelectState(parseInt(value))}
         >
-          <SelectTrigger className="w-[200px]">
+          <SelectTrigger className="w-[200px] bg-slate-100/80">
             <SelectValue placeholder="Filtrar por estado..." />
           </SelectTrigger>
           <SelectContent>

@@ -18,16 +18,18 @@ import { FaUserPlus, FaSave } from "react-icons/fa";
 import { FiCalendar, FiBookOpen } from "react-icons/fi";
 import { Link } from "react-router";
 import { useMovie } from "@/context/MoviesContext";
+import { usePeople } from "@/context/PeopleContext";
 
 export function CDirector() {
   const { newMovie } = useMovie();
-  const [formData, setFormData] = useState<TablesInsert<"director">>({
+  const [formData, setFormData] = useState<TablesInsert<"people">>({
     name: "",
     biography: "",
     birth: undefined,
+    type: 1, // tipo definido de los directores
   });
 
-  const { createDirector } = useDirector();
+  const { createPeoples } = usePeople();
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,7 +39,7 @@ export function CDirector() {
       return;
     }
 
-    await createDirector(formData);
+    await createPeoples(formData);
   };
 
   return (
@@ -90,12 +92,13 @@ export function CDirector() {
               </Label>
               <Textarea
                 id="biography"
-                placeholder="Escribe una breve reseña de su vida y trayectoria..."
+                placeholder="Escribe una breve reseña de su vida y trayectoria... (max: 500)"
                 value={formData.biography}
                 onChange={(e) =>
                   setFormData({ ...formData, biography: e.currentTarget.value })
                 }
                 rows={6}
+                maxLength={500}
               />
             </div>
 
