@@ -66,7 +66,7 @@ export function CReview({ movie_id }: { movie_id: number }) {
               {user ? "Escribe un comentario relacionado a la pelicula" : ""}
             </DialogDescription>
           </DialogHeader>
-          {user ? (
+          {user && user.user ? (
             <>
               <div className="grid gap-4">
                 <div className="grid gap-3">
@@ -75,7 +75,7 @@ export function CReview({ movie_id }: { movie_id: number }) {
                     id="username"
                     name="username"
                     defaultValue={
-                      user.user.user_metadata.username || user.user.email
+                      user.user.user_metadata?.username || user.user.email
                     }
                     disabled={true}
                   />
