@@ -15,6 +15,7 @@ import { User } from "@/pages/User/User";
 import { Redirect } from "@/components/Redirect";
 import { AdminLayout } from "@/pages/User/components/Admin/AdminLayout";
 import { UserRevision } from "@/pages/User/components/Admin/UserRevision";
+import { Error404 } from "@/components/404";
 
 function MovieDetailAdapter({
   redirectUrl,
@@ -85,6 +86,7 @@ export default function App() {
             </Route>
           </Route>
         </Route>
+        <Route path="/*" element={<Error404 />} />
       </Routes>
     </BrowserRouter>
   );

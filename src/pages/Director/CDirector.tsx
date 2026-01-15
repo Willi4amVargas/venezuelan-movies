@@ -9,9 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useDirector } from "@/context/DirectorContext";
 import type { TablesInsert } from "db";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { IoArrowBackOutline } from "react-icons/io5";
 import { FaUserPlus, FaSave } from "react-icons/fa";
@@ -19,17 +18,20 @@ import { FiCalendar, FiBookOpen } from "react-icons/fi";
 import { Link } from "react-router";
 import { useMovie } from "@/context/MoviesContext";
 import { usePeople } from "@/context/PeopleContext";
+import { useUser } from "@/context/UserContext";
 
 export function CDirector() {
   const { newMovie } = useMovie();
+  const { user } = useUser();
+  const { createPeoples } = usePeople();
+
   const [formData, setFormData] = useState<TablesInsert<"people">>({
     name: "",
     biography: "",
     birth: undefined,
     type: 1, // tipo definido de los directores
   });
-
-  const { createPeoples } = usePeople();
+  const [formState, setFormState] = useState(false);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,9 +40,21 @@ export function CDirector() {
       toast.error("Por favor ingrese un nombre");
       return;
     }
-
+    setFormState(true);
     await createPeoples(formData);
+    setFormState(false);
   };
+
+  useEffect(() => {
+    if (!user || !user.user) {
+      toast.info("Es necesario iniciar sesion para agregar un director", {
+        autoClose: false,
+        position: "top-right",
+        toastId: "required_session",
+        closeOnClick: true,
+      });
+    }
+  }, []);
 
   return (
     <section className="flex justify-center items-center p-4 md:p-8 w-full">
@@ -115,7 +129,11 @@ export function CDirector() {
                   </Button>
                 </Link>
               )}
-              <Button type="submit" className="h-10 text-lg font-semibold">
+              <Button
+                type="submit"
+                className="h-10 text-lg font-semibold"
+                disabled={formState}
+              >
                 <FaSave className="mr-2 h-4 w-4" /> Agregar Director
               </Button>
             </div>

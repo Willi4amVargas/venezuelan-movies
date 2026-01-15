@@ -1,4 +1,3 @@
-import { useDirector } from "@/context/DirectorContext";
 import { useEffect } from "react";
 import { DirectorPreview } from "@/pages/Director/components/DirectorPreview";
 import { usePeople } from "@/context/PeopleContext";

@@ -17,9 +17,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { useDirector } from "@/context/DirectorContext";
 import { useMovie } from "@/context/MoviesContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { toast } from "react-toastify";
 import { FaSave } from "react-icons/fa";
@@ -27,13 +26,18 @@ import { FiClock, FiCalendar, FiBookOpen } from "react-icons/fi";
 import { FaCirclePlus } from "react-icons/fa6";
 import { useGender } from "@/context/GenderContext";
 import { Badge } from "@/components/ui/badge";
+import { useUser } from "@/context/UserContext";
+import { usePeople } from "@/context/PeopleContext";
 
 const badgeColors = ["default", "outline", "secondary", "destructive"] as const;
 
 export function CMovies() {
   const { newMovie, setNewMovie, createMovie } = useMovie();
-  const { directors, getDirectors } = useDirector();
+  const { peoples, getPeoples } = usePeople();
   const { genders, getGenders } = useGender();
+  const { user } = useUser();
+
+  const [formState, setFormState] = useState(false);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,16 +71,28 @@ export function CMovies() {
       toast.error("Por favor seleccione un director");
       return;
     }
-
+    setFormState(true);
     await createMovie(newMovie);
     setNewMovie(undefined);
+    setFormState(false);
   };
 
   useEffect(() => {
-    if (!directors) {
-      getDirectors();
+    if (!user || !user.user) {
+      toast.info("Es necesario iniciar sesion para hacer un aporte", {
+        autoClose: false,
+        position: "top-right",
+        toastId: "required_session",
+        closeOnClick: true,
+      });
     }
-  }, [directors]);
+  }, []);
+
+  useEffect(() => {
+    if (!peoples) {
+      getPeoples({ people_type: 1 });
+    }
+  }, [peoples]);
 
   useEffect(() => {
     if (!genders) {
@@ -204,8 +220,8 @@ export function CMovies() {
                     <SelectItem value="-1" disabled>
                       Seleccione un director...
                     </SelectItem>
-                    {directors &&
-                      directors.map((director) => (
+                    {peoples &&
+                      peoples.map((director) => (
                         <SelectItem
                           key={director.id}
                           value={director.id.toString()}
@@ -290,6 +306,7 @@ export function CMovies() {
             <Button
               type="submit"
               className="w-full mt-4 h-10 text-lg font-semibold"
+              disabled={formState}
             >
               <FaSave className="mr-2 h-4 w-4" /> Agregar Película
             </Button>

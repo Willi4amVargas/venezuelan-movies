@@ -58,12 +58,14 @@ export function CReview({ movie_id }: { movie_id: number }) {
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>
-              {user
+              {user && user.user
                 ? "Haz la reseña"
                 : "Necesitas iniciar sesion para realizar esta accion"}
             </DialogTitle>
             <DialogDescription>
-              {user ? "Escribe un comentario relacionado a la pelicula" : ""}
+              {user && user.user
+                ? "Escribe un comentario relacionado a la pelicula"
+                : ""}
             </DialogDescription>
           </DialogHeader>
           {user && user.user ? (
