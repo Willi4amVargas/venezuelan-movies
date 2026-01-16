@@ -194,7 +194,7 @@ export const MovieProvider = ({ children }: { children: React.ReactNode }) => {
     // para actualizar el estado global de las peliculas
     // No se necesita actualizar el estado inmediatamente ya que las peliculas necesitan aprobacion del administrador
     // await getMovies();
-    toast.success("Pelicula creada con exito");
+    toast.info("Tu propuesta fue enviada a revision");
   };
 
   const updateMovie = async ({

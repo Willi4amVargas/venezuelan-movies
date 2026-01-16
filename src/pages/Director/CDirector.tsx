@@ -53,6 +53,8 @@ export function CDirector() {
     if (!user || !user.user) {
       toast.info("Es necesario iniciar sesión para agregar un director", {
         toastId: "required_session",
+        autoClose: false,
+        closeOnClick: true,
       });
     }
   }, [user]);

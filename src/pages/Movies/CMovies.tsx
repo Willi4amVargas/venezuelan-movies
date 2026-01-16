@@ -68,6 +68,8 @@ export function CMovies() {
     if (!user || !user.user) {
       toast.info("Es necesario iniciar sesión para proponer una película", {
         toastId: "required_session",
+        closeOnClick: true,
+        autoClose: false,
       });
     }
     if (!peoples) getPeoples({ people_type: 1 });
@@ -107,7 +109,7 @@ export function CMovies() {
                 </Label>
                 <Input
                   id="title"
-                  placeholder="Ej. Araya"
+                  placeholder="Ej. Libertador"
                   className={inputClasses}
                   value={newMovie?.title || ""}
                   onChange={(e) =>
