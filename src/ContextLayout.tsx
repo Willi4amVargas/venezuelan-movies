@@ -5,16 +5,18 @@ import { Outlet } from "react-router";
 import { NavBar } from "@/components/NavBar";
 import { UserProvider } from "@/context/UserContext";
 import { GenderProvider } from "@/context/GenderContext";
-import { PeopleProvider } from "./context/PeopleContext";
-import { ReviewProvider } from "./context/ReviewsContext";
+import { PeopleProvider } from "@/context/PeopleContext";
+import { ReviewProvider } from "@/context/ReviewsContext";
+import { WatchlistProvider } from "@/context/WatchlistContext";
 
 export function ContextLayout() {
   return (
     <>
       <UserProvider>
-        <MovieProvider>
-          <ReviewProvider>
-            <PeopleProvider>
+        <WatchlistProvider>
+          <MovieProvider>
+            <ReviewProvider>
+              <PeopleProvider>
                 <GenderProvider>
                   <div className="flex h-dvh">
                     <NavBar />
@@ -22,9 +24,10 @@ export function ContextLayout() {
                   </div>
                   <ToastContainer position="bottom-right" />
                 </GenderProvider>
-            </PeopleProvider>
-          </ReviewProvider>
-        </MovieProvider>
+              </PeopleProvider>
+            </ReviewProvider>
+          </MovieProvider>
+        </WatchlistProvider>
       </UserProvider>
     </>
   );

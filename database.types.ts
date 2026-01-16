@@ -39,27 +39,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      director: {
-        Row: {
-          biography: string | null
-          birth: string | null
-          id: number
-          name: string
-        }
-        Insert: {
-          biography?: string | null
-          birth?: string | null
-          id?: number
-          name: string
-        }
-        Update: {
-          biography?: string | null
-          birth?: string | null
-          id?: number
-          name?: string
-        }
-        Relationships: []
-      }
       gender: {
         Row: {
           description: string
@@ -144,10 +123,10 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "movies_director_fkey"
+            foreignKeyName: "movies_director_fkey1"
             columns: ["director"]
             isOneToOne: false
-            referencedRelation: "director"
+            referencedRelation: "people"
             referencedColumns: ["id"]
           },
           {
@@ -315,6 +294,32 @@ export type Database = {
           {
             foreignKeyName: "review_movie_fkey"
             columns: ["movie"]
+            isOneToOne: false
+            referencedRelation: "movies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_watchlist: {
+        Row: {
+          created_at: string
+          movie_id: number
+          user: string
+        }
+        Insert: {
+          created_at?: string
+          movie_id: number
+          user: string
+        }
+        Update: {
+          created_at?: string
+          movie_id?: number
+          user?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_watchlist_movie_id_fkey"
+            columns: ["movie_id"]
             isOneToOne: false
             referencedRelation: "movies"
             referencedColumns: ["id"]

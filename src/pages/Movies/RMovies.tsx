@@ -12,9 +12,12 @@ import {
 } from "@/components/ui/select";
 import { FaArrowLeft } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
+import { Watchlist } from "./components/Watchlist";
+import { useUser } from "@/context/UserContext";
 
 export function RMovies({ adminView }: { adminView?: boolean }) {
   const { movies, getMovies, updateMovie } = useMovie();
+  const { user } = useUser();
 
   const handleStateChange = (movieId: number, newState: string) => {
     updateMovie({
@@ -42,6 +45,7 @@ export function RMovies({ adminView }: { adminView?: boolean }) {
 
       <div className="mb-6">
         <SearchMovies adminView={adminView} />
+        {user && user.user && <Watchlist />}
         {adminView && (
           <Button asChild variant="link">
             <Link to={"/user/admin"} className="flex items-center space-x-2">

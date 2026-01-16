@@ -8,6 +8,9 @@ import { Separator } from "@/components/ui/separator";
 import { FiClock, FiFilm, FiPlay, FiArrowLeft } from "react-icons/fi";
 import { FaTags } from "react-icons/fa";
 import { RReviews } from "@/pages/Reviews/RReviews";
+import { useWatchlist } from "@/context/WatchlistContext";
+import { useUser } from "@/context/UserContext";
+import { toast } from "react-toastify";
 
 export function MovieDetail({
   id,
@@ -20,11 +23,19 @@ export function MovieDetail({
 }) {
   const { movie, getMovies } = useMovie();
   const { movieGenders, getMovieGenders } = useGender();
+  const { watchlist, createWatchlist, getWatchlist } = useWatchlist();
+  const { user } = useUser();
 
   useEffect(() => {
     getMovies({ id: id });
     getMovieGenders(id);
   }, [id]);
+
+  useEffect(() => {
+    if (user && user.user) {
+      if (!watchlist) getWatchlist({ user_id: user.user.id });
+    }
+  }, [user]);
 
   if (!movie) {
     return (
@@ -95,15 +106,46 @@ export function MovieDetail({
                   className="bg-[#f07c42] hover:bg-[#f07c42]/90 text-[#131315] font-bold px-8 py-6 rounded-xl text-lg"
                 >
                   <a href={movie.trailer} target="_blank">
-                    <FiPlay className="mr-2 fill-current" /> Ver Trailer
+                    <FiPlay className="mr-2 fill-current" />
+                    {movie.trailer
+                      ? "Ver Trailer"
+                      : "No hay trailer disponible"}
                   </a>
                 </Button>
-                <Button
-                  variant="outline"
-                  className="bg-white/5 border-white/10 backdrop-blur-sm hover:bg-white/10 py-6 px-8 rounded-xl font-bold"
-                >
-                  Añadir a mi lista
-                </Button>
+                {watchlist && watchlist.find((e) => e.movie_id === movie.id) ? (
+                  <Button
+                    variant="outline"
+                    className="bg-green-300/5 border-green-400/10 backdrop-blur-sm py-6 px-8 rounded-xl font-bold"
+                    disabled
+                  >
+                    Añadido en la lista
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    className="bg-white/5 border-white/10 backdrop-blur-sm hover:bg-white/10 py-6 px-8 rounded-xl font-bold cursor-pointer"
+                    onClick={() => {
+                      if (!user || !user.user) {
+                        toast.info(
+                          "Debes iniciar sesión para añadir a la lista",
+                          {
+                            autoClose: false,
+                            closeOnClick: true,
+                            toastId: "required_session",
+                            position: "top-right",
+                          }
+                        );
+                        return;
+                      }
+                      createWatchlist({
+                        movie_id: movie.id,
+                        user: user.user.id,
+                      });
+                    }}
+                  >
+                    Añadir a mi lista
+                  </Button>
+                )}
               </div>
             </div>
           </div>

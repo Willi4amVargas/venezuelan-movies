@@ -41,7 +41,9 @@ export function Index() {
       <section className="w-full max-w-6xl px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="p-8 rounded-2xl flex flex-col items-center text-center space-y-4">
           <div className="p-3 bg-yellow-100 rounded-full text-yellow-600">
-            <Search size={32} />
+            <Link to={"/rmovies"}>
+              <Search size={32} />
+            </Link>
           </div>
           <h3 className="text-xl font-bold">
             <Link to={"/rmovies"}>Descubre Joyas</Link>
@@ -54,7 +56,9 @@ export function Index() {
 
         <div className="p-8 rounded-2xl flex flex-col items-center text-center space-y-4">
           <div className="p-3 bg-blue-100 rounded-full text-blue-600">
-            <PlusCircle size={32} />
+            <Link to={"/cmovies"}>
+              <PlusCircle size={32} />
+            </Link>
           </div>
           <h3 className="text-xl font-bold">
             <Link to={"/cmovies"}>Haz tu Aporte</Link>
@@ -67,7 +71,9 @@ export function Index() {
 
         <div className="p-8 rounded-2xl flex flex-col items-center text-center space-y-4">
           <div className="p-3 bg-red-100 rounded-full text-red-600">
-            <MessageSquare size={32} />
+            <Link to={"/rmovies"}>
+              <MessageSquare size={32} />
+            </Link>
           </div>
           <h3 className="text-xl font-bold">
             <Link to={"/rmovies"}>Tu Opinión Cuenta</Link>

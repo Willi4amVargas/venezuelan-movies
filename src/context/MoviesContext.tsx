@@ -179,6 +179,7 @@ export const MovieProvider = ({ children }: { children: React.ReactNode }) => {
         cover: filename,
         duration: movie.duration,
         synopsis: movie.synopsis,
+        trailer: movie.trailer,
       })
       .select();
 
@@ -195,7 +196,6 @@ export const MovieProvider = ({ children }: { children: React.ReactNode }) => {
     // await getMovies();
     toast.success("Pelicula creada con exito");
   };
-
 
   const updateMovie = async ({
     id,
