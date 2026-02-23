@@ -39,8 +39,8 @@ export function RMovies({ adminView }: { adminView?: boolean }) {
     <section className="p-4 md:p-8 w-full">
       <h2 className="text-3xl font-extrabold mb-6 tracking-tight border-b pb-2">
         {adminView
-          ? "🛠️ Gestión de Catálogo"
-          : "🎥 Catálogo de Películas Venezolanas"}
+          ? "Gestión de Catálogo"
+          : "Catálogo de Películas Venezolanas"}
       </h2>
 
       <div className="mb-6">
